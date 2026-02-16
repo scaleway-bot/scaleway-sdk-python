@@ -5,6 +5,9 @@ from .types import ListPublicCatalogProductsRequestStatus
 from .types import PublicCatalogProductProductBadge
 from .types import PublicCatalogProductPropertiesGenerativeApisConsumptionMode
 from .types import PublicCatalogProductPropertiesHardwareCPUArch
+from .types import (
+    PublicCatalogProductPropertiesManagedRelationalDatabaseStorageTypeStorageClass,
+)
 from .types import PublicCatalogProductPropertiesObjectStorageClassTypeStorageClass
 from .types import (
     PublicCatalogProductPropertiesObjectStorageInternetTrafficTypeTrafficType,
@@ -22,6 +25,10 @@ from .types import PublicCatalogProductPropertiesHardwareStorage
 from .types import PublicCatalogProductPropertiesKubernetesKapsuleControlPlaneType
 from .types import PublicCatalogProductPropertiesKubernetesKosmosControlPlaneType
 from .types import PublicCatalogProductPropertiesKubernetesKosmosNodeType
+from .types import PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType
+from .types import PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType
+from .types import PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType
+from .types import PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType
 from .types import PublicCatalogProductPropertiesObjectStorageClassType
 from .types import PublicCatalogProductPropertiesObjectStorageInternetTrafficType
 from .types import PublicCatalogProductPropertiesObjectStorageRegionTrafficType
@@ -38,6 +45,7 @@ from .types import PublicCatalogProductPropertiesKubernetes
 from .types import PublicCatalogProductPropertiesLoadBalancer
 from .types import PublicCatalogProductPropertiesManagedInference
 from .types import PublicCatalogProductPropertiesManagedRedisDatabase
+from .types import PublicCatalogProductPropertiesManagedRelationalDatabase
 from .types import PublicCatalogProductPropertiesObjectStorage
 from .types import PublicCatalogProductPropertiesSecretManager
 from .types import PublicCatalogProductEnvironmentalImpactEstimation
@@ -56,6 +64,7 @@ __all__ = [
     "PublicCatalogProductProductBadge",
     "PublicCatalogProductPropertiesGenerativeApisConsumptionMode",
     "PublicCatalogProductPropertiesHardwareCPUArch",
+    "PublicCatalogProductPropertiesManagedRelationalDatabaseStorageTypeStorageClass",
     "PublicCatalogProductPropertiesObjectStorageClassTypeStorageClass",
     "PublicCatalogProductPropertiesObjectStorageInternetTrafficTypeTrafficType",
     "PublicCatalogProductPropertiesObjectStorageRestoreTypeRestoreType",
@@ -71,6 +80,10 @@ __all__ = [
     "PublicCatalogProductPropertiesKubernetesKapsuleControlPlaneType",
     "PublicCatalogProductPropertiesKubernetesKosmosControlPlaneType",
     "PublicCatalogProductPropertiesKubernetesKosmosNodeType",
+    "PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType",
+    "PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType",
+    "PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType",
+    "PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType",
     "PublicCatalogProductPropertiesObjectStorageClassType",
     "PublicCatalogProductPropertiesObjectStorageInternetTrafficType",
     "PublicCatalogProductPropertiesObjectStorageRegionTrafficType",
@@ -87,6 +100,7 @@ __all__ = [
     "PublicCatalogProductPropertiesLoadBalancer",
     "PublicCatalogProductPropertiesManagedInference",
     "PublicCatalogProductPropertiesManagedRedisDatabase",
+    "PublicCatalogProductPropertiesManagedRelationalDatabase",
     "PublicCatalogProductPropertiesObjectStorage",
     "PublicCatalogProductPropertiesSecretManager",
     "PublicCatalogProductEnvironmentalImpactEstimation",

@@ -10,6 +10,7 @@ from scaleway_core.bridge import (
 from .types import (
     PublicCatalogProductProductBadge,
     PublicCatalogProductPropertiesHardwareCPUArch,
+    PublicCatalogProductPropertiesManagedRelationalDatabaseStorageTypeStorageClass,
     PublicCatalogProductPropertiesObjectStorageClassTypeStorageClass,
     PublicCatalogProductPropertiesObjectStorageInternetTrafficTypeTrafficType,
     PublicCatalogProductPropertiesObjectStorageRestoreTypeRestoreType,
@@ -24,6 +25,10 @@ from .types import (
     PublicCatalogProductPropertiesKubernetesKapsuleControlPlaneType,
     PublicCatalogProductPropertiesKubernetesKosmosControlPlaneType,
     PublicCatalogProductPropertiesKubernetesKosmosNodeType,
+    PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType,
+    PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType,
+    PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType,
+    PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType,
     PublicCatalogProductPropertiesObjectStorageClassType,
     PublicCatalogProductPropertiesObjectStorageInternetTrafficType,
     PublicCatalogProductPropertiesObjectStorageRegionTrafficType,
@@ -40,6 +45,7 @@ from .types import (
     PublicCatalogProductPropertiesLoadBalancer,
     PublicCatalogProductPropertiesManagedInference,
     PublicCatalogProductPropertiesManagedRedisDatabase,
+    PublicCatalogProductPropertiesManagedRelationalDatabase,
     PublicCatalogProductPropertiesObjectStorage,
     PublicCatalogProductPropertiesSecretManager,
     PublicCatalogProductEnvironmentalImpactEstimation,
@@ -328,6 +334,66 @@ def unmarshal_PublicCatalogProductPropertiesKubernetesKosmosNodeType(
     args: dict[str, Any] = {}
 
     return PublicCatalogProductPropertiesKubernetesKosmosNodeType(**args)
+
+
+def unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType(
+    data: Any,
+) -> PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    return PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType(**args)
+
+
+def unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType(
+    data: Any,
+) -> PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    return PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType(**args)
+
+
+def unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType(
+    data: Any,
+) -> PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    return PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType(**args)
+
+
+def unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType(
+    data: Any,
+) -> PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("storage_class", None)
+    if field is not None:
+        args["storage_class"] = field
+    else:
+        args["storage_class"] = (
+            PublicCatalogProductPropertiesManagedRelationalDatabaseStorageTypeStorageClass.UNKNOWN_STORAGE_CLASS
+        )
+
+    return PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType(**args)
 
 
 def unmarshal_PublicCatalogProductPropertiesObjectStorageClassType(
@@ -716,6 +782,59 @@ def unmarshal_PublicCatalogProductPropertiesManagedRedisDatabase(
     return PublicCatalogProductPropertiesManagedRedisDatabase(**args)
 
 
+def unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabase(
+    data: Any,
+) -> PublicCatalogProductPropertiesManagedRelationalDatabase:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'PublicCatalogProductPropertiesManagedRelationalDatabase' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("management", None)
+    if field is not None:
+        args["management"] = (
+            unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType(
+                field
+            )
+        )
+    else:
+        args["management"] = None
+
+    field = data.get("node", None)
+    if field is not None:
+        args["node"] = (
+            unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType(
+                field
+            )
+        )
+    else:
+        args["node"] = None
+
+    field = data.get("storage", None)
+    if field is not None:
+        args["storage"] = (
+            unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType(
+                field
+            )
+        )
+    else:
+        args["storage"] = None
+
+    field = data.get("multi_az", None)
+    if field is not None:
+        args["multi_az"] = (
+            unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType(
+                field
+            )
+        )
+    else:
+        args["multi_az"] = None
+
+    return PublicCatalogProductPropertiesManagedRelationalDatabase(**args)
+
+
 def unmarshal_PublicCatalogProductPropertiesObjectStorage(
     data: Any,
 ) -> PublicCatalogProductPropertiesObjectStorage:
@@ -966,6 +1085,14 @@ def unmarshal_PublicCatalogProductProperties(
         args["kubernetes"] = unmarshal_PublicCatalogProductPropertiesKubernetes(field)
     else:
         args["kubernetes"] = None
+
+    field = data.get("managed_relational_database", None)
+    if field is not None:
+        args["managed_relational_database"] = (
+            unmarshal_PublicCatalogProductPropertiesManagedRelationalDatabase(field)
+        )
+    else:
+        args["managed_relational_database"] = None
 
     return PublicCatalogProductProperties(**args)
 

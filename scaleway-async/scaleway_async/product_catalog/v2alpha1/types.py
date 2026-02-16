@@ -32,6 +32,7 @@ class ListPublicCatalogProductsRequestProductType(str, Enum, metaclass=StrEnumMe
     KEY_MANAGER = "key_manager"
     MANAGED_REDIS_DATABASE = "managed_redis_database"
     KUBERNETES = "kubernetes"
+    MANAGED_RELATIONAL_DATABASE = "managed_relational_database"
 
     def __str__(self) -> str:
         return str(self.value)
@@ -82,6 +83,23 @@ class PublicCatalogProductPropertiesHardwareCPUArch(str, Enum, metaclass=StrEnum
     ARM64 = "arm64"
     RISCV = "riscv"
     APPLE_SILICON = "apple_silicon"
+
+    def __str__(self) -> str:
+        return str(self.value)
+
+
+class PublicCatalogProductPropertiesManagedRelationalDatabaseStorageTypeStorageClass(
+    str, Enum, metaclass=StrEnumMeta
+):
+    UNKNOWN_STORAGE_CLASS = "unknown_storage_class"
+    BLOCK_SSD = "block_ssd"
+    BLOCK_SSD_SNAPSHOT = "block_ssd_snapshot"
+    LOCAL_SSD = "local_ssd"
+    SBS_5K = "sbs_5k"
+    SBS_5K_SNAPSHOT = "sbs_5k_snapshot"
+    SBS_15K = "sbs_15k"
+    SBS_15K_SNAPSHOT = "sbs_15k_snapshot"
+    BACKUP = "backup"
 
     def __str__(self) -> str:
         return str(self.value)
@@ -324,6 +342,31 @@ class PublicCatalogProductPropertiesKubernetesKosmosNodeType:
 
 
 @dataclass
+class PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType:
+    pass
+
+
+@dataclass
+class PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType:
+    pass
+
+
+@dataclass
+class PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType:
+    pass
+
+
+@dataclass
+class PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType:
+    storage_class: (
+        PublicCatalogProductPropertiesManagedRelationalDatabaseStorageTypeStorageClass
+    )
+    """
+    The type of Storage class.
+    """
+
+
+@dataclass
 class PublicCatalogProductPropertiesObjectStorageClassType:
     storage_class: PublicCatalogProductPropertiesObjectStorageClassTypeStorageClass
     """
@@ -499,6 +542,25 @@ class PublicCatalogProductPropertiesManagedRedisDatabase:
 
 
 @dataclass
+class PublicCatalogProductPropertiesManagedRelationalDatabase:
+    management: Optional[
+        PublicCatalogProductPropertiesManagedRelationalDatabaseManagementType
+    ] = None
+
+    node: Optional[PublicCatalogProductPropertiesManagedRelationalDatabaseNodeType] = (
+        None
+    )
+
+    storage: Optional[
+        PublicCatalogProductPropertiesManagedRelationalDatabaseStorageType
+    ] = None
+
+    multi_az: Optional[
+        PublicCatalogProductPropertiesManagedRelationalDatabaseMultiAzType
+    ] = None
+
+
+@dataclass
 class PublicCatalogProductPropertiesObjectStorage:
     class_: Optional[PublicCatalogProductPropertiesObjectStorageClassType] = None
 
@@ -577,6 +639,10 @@ class PublicCatalogProductProperties:
     key_manager: Optional[PublicCatalogProductPropertiesKeyManager] = None
 
     kubernetes: Optional[PublicCatalogProductPropertiesKubernetes] = None
+
+    managed_relational_database: Optional[
+        PublicCatalogProductPropertiesManagedRelationalDatabase
+    ] = None
 
 
 @dataclass
