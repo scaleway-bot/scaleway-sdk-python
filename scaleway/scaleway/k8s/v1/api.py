@@ -33,6 +33,7 @@ from .types import (
     AddClusterACLRulesResponse,
     Cluster,
     ClusterType,
+    CoreV1Taint,
     CreateClusterRequest,
     CreateClusterRequestAutoUpgrade,
     CreateClusterRequestAutoscalerConfig,
@@ -56,6 +57,9 @@ from .types import (
     SetClusterACLRulesRequest,
     SetClusterACLRulesResponse,
     SetClusterTypeRequest,
+    SetPoolLabelsRequest,
+    SetPoolStartupTaintsRequest,
+    SetPoolTaintsRequest,
     UpdateClusterRequest,
     UpdateClusterRequestAutoUpgrade,
     UpdateClusterRequestAutoscalerConfig,
@@ -94,6 +98,9 @@ from .marshalling import (
     marshal_CreatePoolRequest,
     marshal_SetClusterACLRulesRequest,
     marshal_SetClusterTypeRequest,
+    marshal_SetPoolLabelsRequest,
+    marshal_SetPoolStartupTaintsRequest,
+    marshal_SetPoolTaintsRequest,
     marshal_UpdateClusterRequest,
     marshal_UpdatePoolRequest,
     marshal_UpgradeClusterRequest,
@@ -1344,6 +1351,138 @@ class K8SV1API(API):
         res = self._request(
             "DELETE",
             f"/k8s/v1/regions/{param_region}/pools/{param_pool_id}",
+        )
+
+        self._throw_on_error(res)
+        return unmarshal_Pool(res.json())
+
+    def set_pool_taints(
+        self,
+        *,
+        pool_id: str,
+        region: Optional[ScwRegion] = None,
+        taints: Optional[list[CoreV1Taint]] = None,
+    ) -> Pool:
+        """
+        Set a list of taints for a specific pool.
+        Apply a list of taints to all nodes of the pool which will be periodically reconciled by scaleway.
+        :param pool_id: ID of the pool to update.
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param taints: List of taints to set.
+        :return: :class:`Pool <Pool>`
+
+        Usage:
+        ::
+
+            result = api.set_pool_taints(
+                pool_id="example",
+            )
+        """
+
+        param_region = validate_path_param(
+            "region", region or self.client.default_region
+        )
+        param_pool_id = validate_path_param("pool_id", pool_id)
+
+        res = self._request(
+            "PUT",
+            f"/k8s/v1/regions/{param_region}/pools/{param_pool_id}/set-taints",
+            body=marshal_SetPoolTaintsRequest(
+                SetPoolTaintsRequest(
+                    pool_id=pool_id,
+                    region=region,
+                    taints=taints,
+                ),
+                self.client,
+            ),
+        )
+
+        self._throw_on_error(res)
+        return unmarshal_Pool(res.json())
+
+    def set_pool_startup_taints(
+        self,
+        *,
+        pool_id: str,
+        region: Optional[ScwRegion] = None,
+        startup_taints: Optional[list[CoreV1Taint]] = None,
+    ) -> Pool:
+        """
+        Set a list of startup taints for a specific pool.
+        Apply a list of taints to new nodes of the pool which would not be reconciled by scaleway.
+        :param pool_id: ID of the pool to update.
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param startup_taints: List of startup taints to set.
+        :return: :class:`Pool <Pool>`
+
+        Usage:
+        ::
+
+            result = api.set_pool_startup_taints(
+                pool_id="example",
+            )
+        """
+
+        param_region = validate_path_param(
+            "region", region or self.client.default_region
+        )
+        param_pool_id = validate_path_param("pool_id", pool_id)
+
+        res = self._request(
+            "PUT",
+            f"/k8s/v1/regions/{param_region}/pools/{param_pool_id}/set-startup-taints",
+            body=marshal_SetPoolStartupTaintsRequest(
+                SetPoolStartupTaintsRequest(
+                    pool_id=pool_id,
+                    region=region,
+                    startup_taints=startup_taints,
+                ),
+                self.client,
+            ),
+        )
+
+        self._throw_on_error(res)
+        return unmarshal_Pool(res.json())
+
+    def set_pool_labels(
+        self,
+        *,
+        pool_id: str,
+        region: Optional[ScwRegion] = None,
+        labels: Optional[dict[str, str]] = None,
+    ) -> Pool:
+        """
+        Set a list of labels for a specific pool.
+        Apply a list of taints to all nodes of the pool (only apply to labels which was set through scaleway api).
+        :param pool_id:
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param labels:
+        :return: :class:`Pool <Pool>`
+
+        Usage:
+        ::
+
+            result = api.set_pool_labels(
+                pool_id="example",
+            )
+        """
+
+        param_region = validate_path_param(
+            "region", region or self.client.default_region
+        )
+        param_pool_id = validate_path_param("pool_id", pool_id)
+
+        res = self._request(
+            "PUT",
+            f"/k8s/v1/regions/{param_region}/pools/{param_pool_id}/set-labels",
+            body=marshal_SetPoolLabelsRequest(
+                SetPoolLabelsRequest(
+                    pool_id=pool_id,
+                    region=region,
+                    labels=labels,
+                ),
+                self.client,
+            ),
         )
 
         self._throw_on_error(res)
