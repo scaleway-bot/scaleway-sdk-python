@@ -82,6 +82,15 @@ class ClusterTypeResiliency(str, Enum, metaclass=StrEnumMeta):
         return str(self.value)
 
 
+class CoreV1TaintEffect(str, Enum, metaclass=StrEnumMeta):
+    NO_SCHEDULE = "no_schedule"
+    PREFER_NO_SCHEDULE = "prefer_no_schedule"
+    NO_EXECUTE = "no_execute"
+
+    def __str__(self) -> str:
+        return str(self.value)
+
+
 class ListClustersRequestOrderBy(str, Enum, metaclass=StrEnumMeta):
     CREATED_AT_ASC = "created_at_asc"
     CREATED_AT_DESC = "created_at_desc"
@@ -207,6 +216,28 @@ class MaintenanceWindow:
     day: MaintenanceWindowDayOfTheWeek
     """
     Day of the week for the maintenance window.
+    """
+
+
+@dataclass
+class CoreV1Taint:
+    """
+    See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/.
+    """
+
+    key: str
+    """
+    The taint key to be applied to a node.
+    """
+
+    value: str
+    """
+    The taint value corresponding to the taint key.
+    """
+
+    effect: CoreV1TaintEffect
+    """
+    Effect defines the effects of Taint.
     """
 
 
@@ -1963,6 +1994,53 @@ class SetClusterTypeRequest:
     region: Optional[ScwRegion] = None
     """
     Region to target. If none is passed will use default region from the config.
+    """
+
+
+@dataclass
+class SetPoolLabelsRequest:
+    pool_id: str
+    region: Optional[ScwRegion] = None
+    """
+    Region to target. If none is passed will use default region from the config.
+    """
+
+    labels: Optional[dict[str, str]] = field(default_factory=dict)
+
+
+@dataclass
+class SetPoolStartupTaintsRequest:
+    pool_id: str
+    """
+    ID of the pool to update.
+    """
+
+    region: Optional[ScwRegion] = None
+    """
+    Region to target. If none is passed will use default region from the config.
+    """
+
+    startup_taints: Optional[list[CoreV1Taint]] = field(default_factory=list)
+    """
+    List of startup taints to set.
+    """
+
+
+@dataclass
+class SetPoolTaintsRequest:
+    pool_id: str
+    """
+    ID of the pool to update.
+    """
+
+    region: Optional[ScwRegion] = None
+    """
+    Region to target. If none is passed will use default region from the config.
+    """
+
+    taints: Optional[list[CoreV1Taint]] = field(default_factory=list)
+    """
+    List of taints to set.
     """
 
 

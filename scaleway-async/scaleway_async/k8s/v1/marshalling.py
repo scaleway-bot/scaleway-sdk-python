@@ -59,6 +59,10 @@ from .types import (
     CreatePoolRequest,
     SetClusterACLRulesRequest,
     SetClusterTypeRequest,
+    SetPoolLabelsRequest,
+    CoreV1Taint,
+    SetPoolStartupTaintsRequest,
+    SetPoolTaintsRequest,
     UpdateClusterRequestAutoUpgrade,
     UpdateClusterRequestAutoscalerConfig,
     UpdateClusterRequestOpenIDConnectConfig,
@@ -1840,6 +1844,64 @@ def marshal_SetClusterTypeRequest(
 
     if request.type_ is not None:
         output["type"] = request.type_
+
+    return output
+
+
+def marshal_SetPoolLabelsRequest(
+    request: SetPoolLabelsRequest,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.labels is not None:
+        output["labels"] = {key: value for key, value in request.labels.items()}
+
+    return output
+
+
+def marshal_CoreV1Taint(
+    request: CoreV1Taint,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.key is not None:
+        output["key"] = request.key
+
+    if request.value is not None:
+        output["value"] = request.value
+
+    if request.effect is not None:
+        output["effect"] = request.effect
+
+    return output
+
+
+def marshal_SetPoolStartupTaintsRequest(
+    request: SetPoolStartupTaintsRequest,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.startup_taints is not None:
+        output["startup_taints"] = [
+            marshal_CoreV1Taint(item, defaults) for item in request.startup_taints
+        ]
+
+    return output
+
+
+def marshal_SetPoolTaintsRequest(
+    request: SetPoolTaintsRequest,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.taints is not None:
+        output["taints"] = [
+            marshal_CoreV1Taint(item, defaults) for item in request.taints
+        ]
 
     return output
 

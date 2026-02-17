@@ -7,6 +7,7 @@ from .types import ClusterStatus
 from .content import CLUSTER_TRANSIENT_STATUSES
 from .types import ClusterTypeAvailability
 from .types import ClusterTypeResiliency
+from .types import CoreV1TaintEffect
 from .types import ListClustersRequestOrderBy
 from .types import ListNodesRequestOrderBy
 from .types import ListPoolsRequestOrderBy
@@ -18,6 +19,7 @@ from .content import POOL_TRANSIENT_STATUSES
 from .types import PoolVolumeType
 from .types import Runtime
 from .types import MaintenanceWindow
+from .types import CoreV1Taint
 from .types import CreateClusterRequestPoolConfigUpgradePolicy
 from .types import ClusterAutoUpgrade
 from .types import ClusterAutoscalerConfig
@@ -82,6 +84,9 @@ from .types import ResetClusterAdminTokenRequest
 from .types import SetClusterACLRulesRequest
 from .types import SetClusterACLRulesResponse
 from .types import SetClusterTypeRequest
+from .types import SetPoolLabelsRequest
+from .types import SetPoolStartupTaintsRequest
+from .types import SetPoolTaintsRequest
 from .types import UpdateClusterRequest
 from .types import UpdatePoolRequest
 from .types import UpgradeClusterRequest
@@ -96,6 +101,7 @@ __all__ = [
     "CLUSTER_TRANSIENT_STATUSES",
     "ClusterTypeAvailability",
     "ClusterTypeResiliency",
+    "CoreV1TaintEffect",
     "ListClustersRequestOrderBy",
     "ListNodesRequestOrderBy",
     "ListPoolsRequestOrderBy",
@@ -107,6 +113,7 @@ __all__ = [
     "PoolVolumeType",
     "Runtime",
     "MaintenanceWindow",
+    "CoreV1Taint",
     "CreateClusterRequestPoolConfigUpgradePolicy",
     "ClusterAutoUpgrade",
     "ClusterAutoscalerConfig",
@@ -171,6 +178,9 @@ __all__ = [
     "SetClusterACLRulesRequest",
     "SetClusterACLRulesResponse",
     "SetClusterTypeRequest",
+    "SetPoolLabelsRequest",
+    "SetPoolStartupTaintsRequest",
+    "SetPoolTaintsRequest",
     "UpdateClusterRequest",
     "UpdatePoolRequest",
     "UpgradeClusterRequest",
