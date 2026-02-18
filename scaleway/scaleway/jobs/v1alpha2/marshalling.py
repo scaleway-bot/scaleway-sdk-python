@@ -14,6 +14,7 @@ from .types import (
     SecretFile,
     Secret,
     CronSchedule,
+    RetryPolicy,
     JobDefinition,
     JobRun,
     CreateSecretsResponse,
@@ -139,6 +140,23 @@ def unmarshal_CronSchedule(data: Any) -> CronSchedule:
     return CronSchedule(**args)
 
 
+def unmarshal_RetryPolicy(data: Any) -> RetryPolicy:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'RetryPolicy' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("max_retries", None)
+    if field is not None:
+        args["max_retries"] = field
+    else:
+        args["max_retries"] = None
+
+    return RetryPolicy(**args)
+
+
 def unmarshal_JobDefinition(data: Any) -> JobDefinition:
     if not isinstance(data, dict):
         raise TypeError(
@@ -249,6 +267,12 @@ def unmarshal_JobDefinition(data: Any) -> JobDefinition:
     else:
         args["cron_schedule"] = None
 
+    field = data.get("retry_policy", None)
+    if field is not None:
+        args["retry_policy"] = unmarshal_RetryPolicy(field)
+    else:
+        args["retry_policy"] = None
+
     return JobDefinition(**args)
 
 
@@ -296,6 +320,12 @@ def unmarshal_JobRun(data: Any) -> JobRun:
     else:
         args["updated_at"] = None
 
+    field = data.get("started_at", None)
+    if field is not None:
+        args["started_at"] = parser.isoparse(field) if isinstance(field, str) else field
+    else:
+        args["started_at"] = None
+
     field = data.get("memory_limit", None)
     if field is not None:
         args["memory_limit"] = field
@@ -331,12 +361,6 @@ def unmarshal_JobRun(data: Any) -> JobRun:
         args["region"] = field
     else:
         args["region"] = None
-
-    field = data.get("started_at", None)
-    if field is not None:
-        args["started_at"] = parser.isoparse(field) if isinstance(field, str) else field
-    else:
-        args["started_at"] = None
 
     field = data.get("terminated_at", None)
     if field is not None:
@@ -375,6 +399,12 @@ def unmarshal_JobRun(data: Any) -> JobRun:
         args["command"] = field
     else:
         args["command"] = None
+
+    field = data.get("attempts", None)
+    if field is not None:
+        args["attempts"] = field
+    else:
+        args["attempts"] = None
 
     return JobRun(**args)
 
@@ -566,6 +596,18 @@ def marshal_CreateJobDefinitionRequestCronScheduleConfig(
     return output
 
 
+def marshal_RetryPolicy(
+    request: RetryPolicy,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.max_retries is not None:
+        output["max_retries"] = request.max_retries
+
+    return output
+
+
 def marshal_CreateJobDefinitionRequest(
     request: CreateJobDefinitionRequest,
     defaults: ProfileDefaults,
@@ -616,6 +658,9 @@ def marshal_CreateJobDefinitionRequest(
         output["cron_schedule"] = marshal_CreateJobDefinitionRequestCronScheduleConfig(
             request.cron_schedule, defaults
         )
+
+    if request.retry_policy is not None:
+        output["retry_policy"] = marshal_RetryPolicy(request.retry_policy, defaults)
 
     return output
 
@@ -745,6 +790,9 @@ def marshal_UpdateJobDefinitionRequest(
         output["cron_schedule"] = marshal_UpdateJobDefinitionRequestCronScheduleConfig(
             request.cron_schedule, defaults
         )
+
+    if request.retry_policy is not None:
+        output["retry_policy"] = marshal_RetryPolicy(request.retry_policy, defaults)
 
     return output
 

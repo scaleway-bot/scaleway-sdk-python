@@ -44,6 +44,7 @@ class JobRunState(str, Enum, metaclass=StrEnumMeta):
     FAILED = "failed"
     INTERRUPTING = "interrupting"
     INTERRUPTED = "interrupted"
+    RETRYING = "retrying"
 
     def __str__(self) -> str:
         return str(self.value)
@@ -85,6 +86,14 @@ class CronSchedule:
     timezone: str
     """
     Timezone for the cron schedule, in tz database format (e.g., 'Europe/Paris').
+    """
+
+
+@dataclass
+class RetryPolicy:
+    max_retries: int
+    """
+    Maximum number of retries upon a job failure.
     """
 
 
@@ -153,6 +162,7 @@ class JobDefinition:
     command: Optional[str] = None
     job_timeout: Optional[str] = None
     cron_schedule: Optional[CronSchedule] = None
+    retry_policy: Optional[RetryPolicy] = None
 
 
 @dataclass
@@ -186,6 +196,7 @@ class JobRun:
     exit_code: Optional[int] = None
     error_message: Optional[str] = None
     command: Optional[str] = None
+    attempts: Optional[int] = None
 
 
 @dataclass
@@ -266,6 +277,11 @@ Environment variables and secrets can be included, and will be expanded before t
     cron_schedule: Optional[CreateJobDefinitionRequestCronScheduleConfig] = None
     """
     Configure a cron for the job.
+    """
+
+    retry_policy: Optional[RetryPolicy] = None
+    """
+    Retry behaviour in case of job failure.
     """
 
 
@@ -590,6 +606,14 @@ Environment variables and secrets can be included, and will be expanded before t
     """
 
     cron_schedule: Optional[UpdateJobDefinitionRequestCronScheduleConfig] = None
+    """
+    Configure a cron for the job.
+    """
+
+    retry_policy: Optional[RetryPolicy] = None
+    """
+    Retry behaviour in case of job failure.
+    """
 
 
 @dataclass
