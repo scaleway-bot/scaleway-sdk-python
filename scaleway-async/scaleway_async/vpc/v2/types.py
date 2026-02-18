@@ -88,6 +88,7 @@ class VPCConnectorStatus(str, Enum, metaclass=StrEnumMeta):
     UNKNOWN_VPC_CONNECTOR_STATUS = "unknown_vpc_connector_status"
     ORPHAN = "orphan"
     PEERED = "peered"
+    CONFLICT = "conflict"
 
     def __str__(self) -> str:
         return str(self.value)
