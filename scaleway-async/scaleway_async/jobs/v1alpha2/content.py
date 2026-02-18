@@ -11,6 +11,7 @@ JOB_RUN_TRANSIENT_STATUSES: list[JobRunState] = [
     JobRunState.QUEUED,
     JobRunState.RUNNING,
     JobRunState.INTERRUPTING,
+    JobRunState.RETRYING,
 ]
 """
 Lists transient statutes of the enum :class:`JobRunState <JobRunState>`.

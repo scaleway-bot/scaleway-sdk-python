@@ -8,6 +8,7 @@ from .types import ListJobRunsRequestOrderBy
 from .types import SecretEnvVar
 from .types import SecretFile
 from .types import CronSchedule
+from .types import RetryPolicy
 from .types import CreateJobDefinitionRequestCronScheduleConfig
 from .types import CreateSecretsRequestSecretConfig
 from .types import Secret
@@ -49,6 +50,7 @@ __all__ = [
     "SecretEnvVar",
     "SecretFile",
     "CronSchedule",
+    "RetryPolicy",
     "CreateJobDefinitionRequestCronScheduleConfig",
     "CreateSecretsRequestSecretConfig",
     "Secret",

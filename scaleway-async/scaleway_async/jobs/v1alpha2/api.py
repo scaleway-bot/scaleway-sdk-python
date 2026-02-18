@@ -29,6 +29,7 @@ from .types import (
     ListJobResourcesResponse,
     ListJobRunsResponse,
     ListSecretsResponse,
+    RetryPolicy,
     Secret,
     StartJobDefinitionRequest,
     StartJobDefinitionResponse,
@@ -77,6 +78,7 @@ class JobsV1Alpha2API(API):
         environment_variables: Optional[dict[str, str]] = None,
         job_timeout: Optional[str] = None,
         cron_schedule: Optional[CreateJobDefinitionRequestCronScheduleConfig] = None,
+        retry_policy: Optional[RetryPolicy] = None,
     ) -> JobDefinition:
         """
         Create a new job definition in a specified Project.
@@ -96,6 +98,7 @@ class JobsV1Alpha2API(API):
         :param environment_variables: Environment variables of the job.
         :param job_timeout: Timeout of the job in seconds.
         :param cron_schedule: Configure a cron for the job.
+        :param retry_policy: Retry behaviour in case of job failure.
         :return: :class:`JobDefinition <JobDefinition>`
 
         Usage:
@@ -133,6 +136,7 @@ class JobsV1Alpha2API(API):
                     environment_variables=environment_variables,
                     job_timeout=job_timeout,
                     cron_schedule=cron_schedule,
+                    retry_policy=retry_policy,
                 ),
                 self.client,
             ),
@@ -279,6 +283,7 @@ class JobsV1Alpha2API(API):
         description: Optional[str] = None,
         job_timeout: Optional[str] = None,
         cron_schedule: Optional[UpdateJobDefinitionRequestCronScheduleConfig] = None,
+        retry_policy: Optional[RetryPolicy] = None,
     ) -> JobDefinition:
         """
         Update an existing job definition associated with the specified unique identifier.
@@ -297,7 +302,8 @@ class JobsV1Alpha2API(API):
         :param environment_variables: Environment variables of the job.
         :param description: Description of the job.
         :param job_timeout: Timeout of the job in seconds.
-        :param cron_schedule:
+        :param cron_schedule: Configure a cron for the job.
+        :param retry_policy: Retry behaviour in case of job failure.
         :return: :class:`JobDefinition <JobDefinition>`
 
         Usage:
@@ -334,6 +340,7 @@ class JobsV1Alpha2API(API):
                     description=description,
                     job_timeout=job_timeout,
                     cron_schedule=cron_schedule,
+                    retry_policy=retry_policy,
                 ),
                 self.client,
             ),
