@@ -469,6 +469,12 @@ def unmarshal_Cluster(data: Any) -> Cluster:
     else:
         args["apiserver_cert_sans"] = []
 
+    field = data.get("acl_available", None)
+    if field is not None:
+        args["acl_available"] = field
+    else:
+        args["acl_available"] = False
+
     field = data.get("iam_nodes_group_id", None)
     if field is not None:
         args["iam_nodes_group_id"] = field
@@ -506,12 +512,6 @@ def unmarshal_Cluster(data: Any) -> Cluster:
         )
     else:
         args["commitment_ends_at"] = None
-
-    field = data.get("acl_available", None)
-    if field is not None:
-        args["acl_available"] = field
-    else:
-        args["acl_available"] = False
 
     return Cluster(**args)
 
@@ -560,6 +560,12 @@ def unmarshal_Node(data: Any) -> Node:
     else:
         args["name"] = None
 
+    field = data.get("conditions", None)
+    if field is not None:
+        args["conditions"] = field
+    else:
+        args["conditions"] = {}
+
     field = data.get("public_ip_v4", None)
     if field is not None:
         args["public_ip_v4"] = field
@@ -571,12 +577,6 @@ def unmarshal_Node(data: Any) -> Node:
         args["public_ip_v6"] = field
     else:
         args["public_ip_v6"] = None
-
-    field = data.get("conditions", None)
-    if field is not None:
-        args["conditions"] = field
-    else:
-        args["conditions"] = {}
 
     field = data.get("status", None)
     if field is not None:

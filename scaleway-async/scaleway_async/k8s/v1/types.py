@@ -799,6 +799,11 @@ class Cluster:
     Additional Subject Alternative Names for the Kubernetes API server certificate.
     """
 
+    acl_available: bool
+    """
+    Defines whether ACL is available on the cluster.
+    """
+
     iam_nodes_group_id: str
     """
     IAM group that nodes are members of (this field might be empty during early stage of cluster creation).
@@ -854,11 +859,6 @@ class Cluster:
     Date on which it will be possible to switch to a smaller offer.
     """
 
-    acl_available: Optional[bool] = False
-    """
-    Defines whether ACL is available on the cluster.
-    """
-
 
 @dataclass
 class Node:
@@ -892,6 +892,11 @@ class Node:
     Name of the node.
     """
 
+    conditions: dict[str, str]
+    """
+    Conditions of the node. These conditions contain the Node Problem Detector conditions, as well as some in house conditions.
+    """
+
     status: NodeStatus
     """
     Status of the node.
@@ -905,11 +910,6 @@ class Node:
     public_ip_v6: Optional[str] = None
     """
     Public IPv6 address of the node.
-    """
-
-    conditions: Optional[dict[str, str]] = field(default_factory=dict)
-    """
-    Conditions of the node. These conditions contain the Node Problem Detector conditions, as well as some in house conditions.
     """
 
     error_message: Optional[str] = None
