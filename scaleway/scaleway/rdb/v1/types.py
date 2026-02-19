@@ -662,11 +662,11 @@ class ACLRuleRequest:
 @dataclass
 class ACLRule:
     ip: str
+    port: int
     protocol: ACLRuleProtocol
     direction: ACLRuleDirection
     action: ACLRuleAction
     description: str
-    port: Optional[int] = None
 
 
 @dataclass
@@ -991,6 +991,11 @@ class NodeType:
     Quantity of RAM.
     """
 
+    is_bssd_compatible: bool
+    """
+    The Node Type is compliant with Block Storage.
+    """
+
     disabled: bool
     """
     The Node Type is currently disabled.
@@ -1029,11 +1034,6 @@ class NodeType:
     volume_constraint: Optional[NodeTypeVolumeConstraintSizes] = None
     """
     [deprecated] Node Type volume constraints.
-    """
-
-    is_bssd_compatible: Optional[bool] = False
-    """
-    The Node Type is compliant with Block Storage.
     """
 
 
