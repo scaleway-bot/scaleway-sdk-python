@@ -557,6 +557,21 @@ class CreateClusterRequestPoolConfig:
     Defines if the public IP should be removed from Nodes. To use this feature, your Cluster must have an attached Private Network set up with a Public Gateway.
     """
 
+    labels: dict[str, str]
+    """
+    Kubernetes labels applied and reconciled on the nodes.
+    """
+
+    taints: list[CoreV1Taint]
+    """
+    Kubernetes taints applied and reconciled on the nodes.
+    """
+
+    startup_taints: list[CoreV1Taint]
+    """
+    Kubernetes taints applied at node creation but not reconciled afterwards.
+    """
+
     placement_group_id: Optional[str] = None
     """
     Placement group ID in which all the nodes of the pool will be created, placement groups are limited to 20 instances.
@@ -799,6 +814,11 @@ class Cluster:
     Additional Subject Alternative Names for the Kubernetes API server certificate.
     """
 
+    acl_available: bool
+    """
+    Defines whether ACL is available on the cluster.
+    """
+
     iam_nodes_group_id: str
     """
     IAM group that nodes are members of (this field might be empty during early stage of cluster creation).
@@ -854,11 +874,6 @@ class Cluster:
     Date on which it will be possible to switch to a smaller offer.
     """
 
-    acl_available: Optional[bool] = False
-    """
-    Defines whether ACL is available on the cluster.
-    """
-
 
 @dataclass
 class Node:
@@ -892,6 +907,11 @@ class Node:
     Name of the node.
     """
 
+    conditions: dict[str, str]
+    """
+    Conditions of the node. These conditions contain the Node Problem Detector conditions, as well as some in house conditions.
+    """
+
     status: NodeStatus
     """
     Status of the node.
@@ -905,11 +925,6 @@ class Node:
     public_ip_v6: Optional[str] = None
     """
     Public IPv6 address of the node.
-    """
-
-    conditions: Optional[dict[str, str]] = field(default_factory=dict)
-    """
-    Conditions of the node. These conditions contain the Node Problem Detector conditions, as well as some in house conditions.
     """
 
     error_message: Optional[str] = None
@@ -1021,6 +1036,21 @@ class Pool:
     security_group_id: str
     """
     Security group ID in which all the nodes of the pool will be created. If unset, the pool will use default Kapsule security group in current zone.
+    """
+
+    labels: dict[str, str]
+    """
+    Kubernetes labels applied and reconciled on the nodes.
+    """
+
+    taints: list[CoreV1Taint]
+    """
+    Kubernetes taints applied and reconciled on the nodes.
+    """
+
+    startup_taints: list[CoreV1Taint]
+    """
+    Kubernetes taints applied at node creation but not reconciled afterwards.
     """
 
     region: ScwRegion
@@ -1414,6 +1444,21 @@ class CreatePoolRequest:
     security_group_id: Optional[str] = None
     """
     Security group ID in which all the nodes of the pool will be created. If unset, the pool will use default Kapsule security group in current zone.
+    """
+
+    labels: Optional[dict[str, str]] = field(default_factory=dict)
+    """
+    Kubernetes labels applied and reconciled on the nodes.
+    """
+
+    taints: Optional[list[CoreV1Taint]] = field(default_factory=list)
+    """
+    Kubernetes taints applied and reconciled on the nodes.
+    """
+
+    startup_taints: Optional[list[CoreV1Taint]] = field(default_factory=list)
+    """
+    Kubernetes taints applied at node creation but not reconciled afterwards.
     """
 
 

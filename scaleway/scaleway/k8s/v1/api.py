@@ -1040,18 +1040,18 @@ class K8SV1API(API):
     def create_pool(
         self,
         *,
-        region: Optional[ScwRegion] = None,
         cluster_id: str,
         node_type: str,
         autoscaling: bool,
         size: int,
+        region: Optional[ScwRegion] = None,
         name: Optional[str] = None,
         placement_group_id: Optional[str] = None,
         min_size: Optional[int] = None,
-        autohealing: bool,
-        public_ip_disabled: bool,
         max_size: Optional[int] = None,
         container_runtime: Optional[Runtime] = None,
+        autohealing: bool,
+        public_ip_disabled: bool,
         tags: Optional[list[str]] = None,
         kubelet_args: Optional[dict[str, str]] = None,
         upgrade_policy: Optional[CreatePoolRequestUpgradePolicy] = None,
@@ -1059,22 +1059,25 @@ class K8SV1API(API):
         root_volume_type: Optional[PoolVolumeType] = None,
         root_volume_size: Optional[int] = None,
         security_group_id: Optional[str] = None,
+        labels: Optional[dict[str, str]] = None,
+        taints: Optional[list[CoreV1Taint]] = None,
+        startup_taints: Optional[list[CoreV1Taint]] = None,
     ) -> Pool:
         """
         Create a new Pool in a Cluster.
         Create a new pool in a specific Kubernetes cluster.
-        :param region: Region to target. If none is passed will use default region from the config.
         :param cluster_id: Cluster ID to which the pool will be attached.
         :param node_type: Node type is the type of Scaleway Instance wanted for the pool. Nodes with insufficient memory are not eligible (DEV1-S, PLAY2-PICO, STARDUST). 'external' is a special node type used to provision instances from other cloud providers in a Kosmos Cluster.
         :param autoscaling: Defines whether the autoscaling feature is enabled for the pool.
         :param size: Size (number of nodes) of the pool.
+        :param region: Region to target. If none is passed will use default region from the config.
         :param name: Pool name.
         :param placement_group_id: Placement group ID in which all the nodes of the pool will be created, placement groups are limited to 20 instances.
         :param min_size: Defines the minimum size of the pool. Note that this field is only used when autoscaling is enabled on the pool.
-        :param autohealing: Defines whether the autohealing feature is enabled for the pool.
-        :param public_ip_disabled: Defines if the public IP should be removed from Nodes. To use this feature, your Cluster must have an attached Private Network set up with a Public Gateway.
         :param max_size: Defines the maximum size of the pool. Note that this field is only used when autoscaling is enabled on the pool.
         :param container_runtime: Customization of the container runtime is available for each pool.
+        :param autohealing: Defines whether the autohealing feature is enabled for the pool.
+        :param public_ip_disabled: Defines if the public IP should be removed from Nodes. To use this feature, your Cluster must have an attached Private Network set up with a Public Gateway.
         :param tags: Tags associated with the pool, see [managing tags](https://www.scaleway.com/en/docs/kubernetes/api-cli/managing-tags).
         :param kubelet_args: Kubelet arguments to be used by this pool. Note that this feature is experimental.
         :param upgrade_policy: Pool upgrade policy.
@@ -1085,6 +1088,9 @@ class K8SV1API(API):
         * `b_ssd` is the legacy remote block storage which means your system is stored on a centralized and resilient cluster. Not available for new pools, use `sbs_5k` or `sbs_15k` instead.
         :param root_volume_size: System volume disk size.
         :param security_group_id: Security group ID in which all the nodes of the pool will be created. If unset, the pool will use default Kapsule security group in current zone.
+        :param labels: Kubernetes labels applied and reconciled on the nodes.
+        :param taints: Kubernetes taints applied and reconciled on the nodes.
+        :param startup_taints: Kubernetes taints applied at node creation but not reconciled afterwards.
         :return: :class:`Pool <Pool>`
 
         Usage:
@@ -1129,6 +1135,9 @@ class K8SV1API(API):
                     root_volume_type=root_volume_type,
                     root_volume_size=root_volume_size,
                     security_group_id=security_group_id,
+                    labels=labels,
+                    taints=taints,
+                    startup_taints=startup_taints,
                 ),
                 self.client,
             ),
