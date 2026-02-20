@@ -310,12 +310,6 @@ def unmarshal_ContactExtensionIT(data: Any) -> ContactExtensionIT:
 
     args: dict[str, Any] = {}
 
-    field = data.get("pin", None)
-    if field is not None:
-        args["pin"] = field
-    else:
-        args["pin"] = None
-
     field = data.get("european_citizenship", None)
     if field is not None:
         args["european_citizenship"] = field
@@ -327,6 +321,12 @@ def unmarshal_ContactExtensionIT(data: Any) -> ContactExtensionIT:
         args["tax_code"] = field
     else:
         args["tax_code"] = None
+
+    field = data.get("pin", None)
+    if field is not None:
+        args["pin"] = field
+    else:
+        args["pin"] = None
 
     return ContactExtensionIT(**args)
 
@@ -493,12 +493,6 @@ def unmarshal_Contact(data: Any) -> Contact:
     else:
         args["resale"] = None
 
-    field = data.get("whois_opt_in", None)
-    if field is not None:
-        args["whois_opt_in"] = field
-    else:
-        args["whois_opt_in"] = None
-
     field = data.get("questions", None)
     if field is not None:
         args["questions"] = (
@@ -506,6 +500,12 @@ def unmarshal_Contact(data: Any) -> Contact:
         )
     else:
         args["questions"] = None
+
+    field = data.get("whois_opt_in", None)
+    if field is not None:
+        args["whois_opt_in"] = field
+    else:
+        args["whois_opt_in"] = None
 
     field = data.get("extension_fr", None)
     if field is not None:
@@ -3016,14 +3016,14 @@ def marshal_ContactExtensionIT(
 ) -> dict[str, Any]:
     output: dict[str, Any] = {}
 
-    if request.pin is not None:
-        output["pin"] = request.pin
-
     if request.european_citizenship is not None:
         output["european_citizenship"] = request.european_citizenship
 
     if request.tax_code is not None:
         output["tax_code"] = request.tax_code
+
+    if request.pin is not None:
+        output["pin"] = request.pin
 
     return output
 
@@ -3111,6 +3111,11 @@ def marshal_NewContact(
     if request.resale is not None:
         output["resale"] = request.resale
 
+    if request.questions is not None:
+        output["questions"] = [
+            marshal_ContactQuestion(item, defaults) for item in request.questions
+        ]
+
     if request.whois_opt_in is not None:
         output["whois_opt_in"] = request.whois_opt_in
 
@@ -3119,11 +3124,6 @@ def marshal_NewContact(
 
     if request.company_identification_code is not None:
         output["company_identification_code"] = request.company_identification_code
-
-    if request.questions is not None:
-        output["questions"] = [
-            marshal_ContactQuestion(item, defaults) for item in request.questions
-        ]
 
     if request.extension_fr is not None:
         output["extension_fr"] = marshal_ContactExtensionFR(
