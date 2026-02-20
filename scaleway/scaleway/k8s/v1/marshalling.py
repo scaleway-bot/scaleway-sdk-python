@@ -16,6 +16,7 @@ from .types import (
     ClusterStatus,
     ClusterTypeAvailability,
     ClusterTypeResiliency,
+    CoreV1TaintEffect,
     MaintenanceWindowDayOfTheWeek,
     NodeStatus,
     PoolStatus,
@@ -28,6 +29,7 @@ from .types import (
     ClusterOpenIDConnectConfig,
     Cluster,
     Node,
+    CoreV1Taint,
     PoolUpgradePolicy,
     Pool,
     ACLRule,
@@ -60,7 +62,6 @@ from .types import (
     SetClusterACLRulesRequest,
     SetClusterTypeRequest,
     SetPoolLabelsRequest,
-    CoreV1Taint,
     SetPoolStartupTaintsRequest,
     SetPoolTaintsRequest,
     UpdateClusterRequestAutoUpgrade,
@@ -469,6 +470,12 @@ def unmarshal_Cluster(data: Any) -> Cluster:
     else:
         args["apiserver_cert_sans"] = []
 
+    field = data.get("acl_available", None)
+    if field is not None:
+        args["acl_available"] = field
+    else:
+        args["acl_available"] = False
+
     field = data.get("iam_nodes_group_id", None)
     if field is not None:
         args["iam_nodes_group_id"] = field
@@ -506,12 +513,6 @@ def unmarshal_Cluster(data: Any) -> Cluster:
         )
     else:
         args["commitment_ends_at"] = None
-
-    field = data.get("acl_available", None)
-    if field is not None:
-        args["acl_available"] = field
-    else:
-        args["acl_available"] = False
 
     return Cluster(**args)
 
@@ -560,6 +561,12 @@ def unmarshal_Node(data: Any) -> Node:
     else:
         args["name"] = None
 
+    field = data.get("conditions", None)
+    if field is not None:
+        args["conditions"] = field
+    else:
+        args["conditions"] = {}
+
     field = data.get("public_ip_v4", None)
     if field is not None:
         args["public_ip_v4"] = field
@@ -571,12 +578,6 @@ def unmarshal_Node(data: Any) -> Node:
         args["public_ip_v6"] = field
     else:
         args["public_ip_v6"] = None
-
-    field = data.get("conditions", None)
-    if field is not None:
-        args["conditions"] = field
-    else:
-        args["conditions"] = {}
 
     field = data.get("status", None)
     if field is not None:
@@ -603,6 +604,35 @@ def unmarshal_Node(data: Any) -> Node:
         args["updated_at"] = None
 
     return Node(**args)
+
+
+def unmarshal_CoreV1Taint(data: Any) -> CoreV1Taint:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'CoreV1Taint' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("key", None)
+    if field is not None:
+        args["key"] = field
+    else:
+        args["key"] = None
+
+    field = data.get("value", None)
+    if field is not None:
+        args["value"] = field
+    else:
+        args["value"] = None
+
+    field = data.get("effect", None)
+    if field is not None:
+        args["effect"] = field
+    else:
+        args["effect"] = CoreV1TaintEffect.NO_SCHEDULE
+
+    return CoreV1Taint(**args)
 
 
 def unmarshal_PoolUpgradePolicy(data: Any) -> PoolUpgradePolicy:
@@ -738,6 +768,18 @@ def unmarshal_Pool(data: Any) -> Pool:
     else:
         args["zone"] = None
 
+    field = data.get("placement_group_id", None)
+    if field is not None:
+        args["placement_group_id"] = field
+    else:
+        args["placement_group_id"] = None
+
+    field = data.get("upgrade_policy", None)
+    if field is not None:
+        args["upgrade_policy"] = unmarshal_PoolUpgradePolicy(field)
+    else:
+        args["upgrade_policy"] = None
+
     field = data.get("root_volume_type", None)
     if field is not None:
         args["root_volume_type"] = field
@@ -756,23 +798,33 @@ def unmarshal_Pool(data: Any) -> Pool:
     else:
         args["security_group_id"] = None
 
+    field = data.get("labels", None)
+    if field is not None:
+        args["labels"] = field
+    else:
+        args["labels"] = {}
+
+    field = data.get("taints", None)
+    if field is not None:
+        args["taints"] = (
+            [unmarshal_CoreV1Taint(v) for v in field] if field is not None else None
+        )
+    else:
+        args["taints"] = []
+
+    field = data.get("startup_taints", None)
+    if field is not None:
+        args["startup_taints"] = (
+            [unmarshal_CoreV1Taint(v) for v in field] if field is not None else None
+        )
+    else:
+        args["startup_taints"] = []
+
     field = data.get("region", None)
     if field is not None:
         args["region"] = field
     else:
         args["region"] = None
-
-    field = data.get("placement_group_id", None)
-    if field is not None:
-        args["placement_group_id"] = field
-    else:
-        args["placement_group_id"] = None
-
-    field = data.get("upgrade_policy", None)
-    if field is not None:
-        args["upgrade_policy"] = unmarshal_PoolUpgradePolicy(field)
-    else:
-        args["upgrade_policy"] = None
 
     field = data.get("root_volume_size", None)
     if field is not None:
@@ -1481,6 +1533,24 @@ def marshal_MaintenanceWindow(
     return output
 
 
+def marshal_CoreV1Taint(
+    request: CoreV1Taint,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.key is not None:
+        output["key"] = request.key
+
+    if request.value is not None:
+        output["value"] = request.value
+
+    if request.effect is not None:
+        output["effect"] = request.effect
+
+    return output
+
+
 def marshal_CreateClusterRequestPoolConfigUpgradePolicy(
     request: CreateClusterRequestPoolConfigUpgradePolicy,
     defaults: ProfileDefaults,
@@ -1645,6 +1715,19 @@ def marshal_CreateClusterRequestPoolConfig(
 
     if request.public_ip_disabled is not None:
         output["public_ip_disabled"] = request.public_ip_disabled
+
+    if request.labels is not None:
+        output["labels"] = {key: value for key, value in request.labels.items()}
+
+    if request.taints is not None:
+        output["taints"] = [
+            marshal_CoreV1Taint(item, defaults) for item in request.taints
+        ]
+
+    if request.startup_taints is not None:
+        output["startup_taints"] = [
+            marshal_CoreV1Taint(item, defaults) for item in request.startup_taints
+        ]
 
     if request.security_group_id is not None:
         output["security_group_id"] = request.security_group_id
@@ -1819,6 +1902,19 @@ def marshal_CreatePoolRequest(
     if request.security_group_id is not None:
         output["security_group_id"] = request.security_group_id
 
+    if request.labels is not None:
+        output["labels"] = {key: value for key, value in request.labels.items()}
+
+    if request.taints is not None:
+        output["taints"] = [
+            marshal_CoreV1Taint(item, defaults) for item in request.taints
+        ]
+
+    if request.startup_taints is not None:
+        output["startup_taints"] = [
+            marshal_CoreV1Taint(item, defaults) for item in request.startup_taints
+        ]
+
     return output
 
 
@@ -1856,24 +1952,6 @@ def marshal_SetPoolLabelsRequest(
 
     if request.labels is not None:
         output["labels"] = {key: value for key, value in request.labels.items()}
-
-    return output
-
-
-def marshal_CoreV1Taint(
-    request: CoreV1Taint,
-    defaults: ProfileDefaults,
-) -> dict[str, Any]:
-    output: dict[str, Any] = {}
-
-    if request.key is not None:
-        output["key"] = request.key
-
-    if request.value is not None:
-        output["value"] = request.value
-
-    if request.effect is not None:
-        output["effect"] = request.effect
 
     return output
 
