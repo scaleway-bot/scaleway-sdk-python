@@ -389,6 +389,7 @@ class DatawarehouseV1Beta1API(API):
         region: Optional[ScwRegion] = None,
         project_id: Optional[str] = None,
         tags: Optional[list[str]] = None,
+        shard_count: Optional[int] = None,
         endpoints: Optional[list[EndpointSpec]] = None,
     ) -> Deployment:
         """
@@ -404,6 +405,7 @@ class DatawarehouseV1Beta1API(API):
         :param region: Region to target. If none is passed will use default region from the config.
         :param project_id: The Project ID on which the deployment will be created.
         :param tags: Tags to apply to the deployment.
+        :param shard_count: Number of shard for the deployment.
         :param endpoints: Endpoints to associate with the deployment.
         :return: :class:`Deployment <Deployment>`
 
@@ -440,6 +442,7 @@ class DatawarehouseV1Beta1API(API):
                     region=region,
                     project_id=project_id,
                     tags=tags,
+                    shard_count=shard_count,
                     endpoints=endpoints,
                 ),
                 self.client,
