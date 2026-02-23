@@ -207,6 +207,12 @@ def unmarshal_JobDefinition(data: Any) -> JobDefinition:
     else:
         args["image_uri"] = None
 
+    field = data.get("command", None)
+    if field is not None:
+        args["command"] = field
+    else:
+        args["command"] = None
+
     field = data.get("environment_variables", None)
     if field is not None:
         args["environment_variables"] = field
@@ -224,12 +230,6 @@ def unmarshal_JobDefinition(data: Any) -> JobDefinition:
         args["updated_at"] = parser.isoparse(field) if isinstance(field, str) else field
     else:
         args["updated_at"] = None
-
-    field = data.get("command", None)
-    if field is not None:
-        args["command"] = field
-    else:
-        args["command"] = None
 
     field = data.get("job_timeout", None)
     if field is not None:
@@ -302,12 +302,6 @@ def unmarshal_JobRun(data: Any) -> JobRun:
     else:
         args["state"] = None
 
-    field = data.get("cpu_limit", None)
-    if field is not None:
-        args["cpu_limit"] = field
-    else:
-        args["cpu_limit"] = None
-
     field = data.get("created_at", None)
     if field is not None:
         args["created_at"] = parser.isoparse(field) if isinstance(field, str) else field
@@ -326,6 +320,12 @@ def unmarshal_JobRun(data: Any) -> JobRun:
     else:
         args["started_at"] = None
 
+    field = data.get("cpu_limit", None)
+    if field is not None:
+        args["cpu_limit"] = field
+    else:
+        args["cpu_limit"] = None
+
     field = data.get("memory_limit", None)
     if field is not None:
         args["memory_limit"] = field
@@ -337,6 +337,12 @@ def unmarshal_JobRun(data: Any) -> JobRun:
         args["local_storage_capacity"] = field
     else:
         args["local_storage_capacity"] = None
+
+    field = data.get("command", None)
+    if field is not None:
+        args["command"] = field
+    else:
+        args["command"] = None
 
     field = data.get("environment_variables", None)
     if field is not None:
@@ -393,12 +399,6 @@ def unmarshal_JobRun(data: Any) -> JobRun:
         args["error_message"] = field
     else:
         args["error_message"] = None
-
-    field = data.get("command", None)
-    if field is not None:
-        args["command"] = field
-    else:
-        args["command"] = None
 
     field = data.get("attempts", None)
     if field is not None:
@@ -629,11 +629,11 @@ def marshal_CreateJobDefinitionRequest(
     if request.name is not None:
         output["name"] = request.name
 
-    if request.description is not None:
-        output["description"] = request.description
-
     if request.command is not None:
         output["command"] = request.command
+
+    if request.description is not None:
+        output["description"] = request.description
 
     if request.startup_command is not None:
         output["startup_command"] = request.startup_command
