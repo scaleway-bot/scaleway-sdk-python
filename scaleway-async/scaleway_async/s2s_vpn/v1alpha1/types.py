@@ -288,6 +288,16 @@ class Connection:
     Status of the IPsec tunnel.
     """
 
+    tunnel_status_ipv4: TunnelStatus
+    """
+    Status of the IPv4 IPsec tunnel.
+    """
+
+    tunnel_status_ipv6: TunnelStatus
+    """
+    Status of the IPv6 IPsec tunnel.
+    """
+
     bgp_status_ipv4: BgpSessionStatus
     """
     Status of the BGP IPv4 session.
@@ -311,16 +321,6 @@ class Connection:
     updated_at: Optional[datetime] = None
     """
     Last modification date of the connection.
-    """
-
-    tunnel_status_ipv4: Optional[TunnelStatus] = TunnelStatus.UNKNOWN_TUNNEL_STATUS
-    """
-    Status of the IPv4 IPsec tunnel.
-    """
-
-    tunnel_status_ipv6: Optional[TunnelStatus] = TunnelStatus.UNKNOWN_TUNNEL_STATUS
-    """
-    Status of the IPv6 IPsec tunnel.
     """
 
     bgp_session_ipv4: Optional[BgpSession] = None
@@ -639,14 +639,14 @@ class CreateConnectionRequest:
 
 @dataclass
 class CreateConnectionResponse:
+    pre_shared_key: str
+    """
+    Deprecated, use secret_id & secret_revision fields.
+    """
+
     connection: Optional[Connection] = None
     """
     This connection.
-    """
-
-    pre_shared_key: Optional[str] = None
-    """
-    Deprecated, use secret_id & secret_revision fields.
     """
 
 
@@ -1246,14 +1246,14 @@ class RenewConnectionPskRequest:
 
 @dataclass
 class RenewConnectionPskResponse:
+    pre_shared_key: str
+    """
+    Deprecated, use secret_id & secret_revision fields.
+    """
+
     connection: Optional[Connection] = None
     """
     This connection.
-    """
-
-    pre_shared_key: Optional[str] = None
-    """
-    Deprecated, use secret_id & secret_revision fields.
     """
 
 

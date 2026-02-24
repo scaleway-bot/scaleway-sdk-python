@@ -1014,6 +1014,12 @@ def unmarshal_ACLRule(data: Any) -> ACLRule:
     else:
         args["ip"] = None
 
+    field = data.get("port", None)
+    if field is not None:
+        args["port"] = field
+    else:
+        args["port"] = None
+
     field = data.get("protocol", None)
     if field is not None:
         args["protocol"] = field
@@ -1037,12 +1043,6 @@ def unmarshal_ACLRule(data: Any) -> ACLRule:
         args["description"] = field
     else:
         args["description"] = None
-
-    field = data.get("port", None)
-    if field is not None:
-        args["port"] = field
-    else:
-        args["port"] = None
 
     return ACLRule(**args)
 
@@ -1622,18 +1622,6 @@ def unmarshal_NodeType(data: Any) -> NodeType:
     else:
         args["memory"] = 0
 
-    field = data.get("disabled", None)
-    if field is not None:
-        args["disabled"] = field
-    else:
-        args["disabled"] = False
-
-    field = data.get("beta", None)
-    if field is not None:
-        args["beta"] = field
-    else:
-        args["beta"] = False
-
     field = data.get("volume_constraint", None)
     if field is not None:
         args["volume_constraint"] = unmarshal_NodeTypeVolumeConstraintSizes(field)
@@ -1645,6 +1633,18 @@ def unmarshal_NodeType(data: Any) -> NodeType:
         args["is_bssd_compatible"] = field
     else:
         args["is_bssd_compatible"] = False
+
+    field = data.get("disabled", None)
+    if field is not None:
+        args["disabled"] = field
+    else:
+        args["disabled"] = False
+
+    field = data.get("beta", None)
+    if field is not None:
+        args["beta"] = field
+    else:
+        args["beta"] = False
 
     field = data.get("available_volume_types", None)
     if field is not None:

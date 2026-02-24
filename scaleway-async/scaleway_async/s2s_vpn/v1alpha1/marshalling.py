@@ -151,6 +151,18 @@ def unmarshal_Connection(data: Any) -> Connection:
     else:
         args["status"] = ConnectionStatus.UNKNOWN_STATUS
 
+    field = data.get("created_at", None)
+    if field is not None:
+        args["created_at"] = parser.isoparse(field) if isinstance(field, str) else field
+    else:
+        args["created_at"] = None
+
+    field = data.get("updated_at", None)
+    if field is not None:
+        args["updated_at"] = parser.isoparse(field) if isinstance(field, str) else field
+    else:
+        args["updated_at"] = None
+
     field = data.get("is_ipv6", None)
     if field is not None:
         args["is_ipv6"] = field
@@ -174,18 +186,6 @@ def unmarshal_Connection(data: Any) -> Connection:
         args["secret_revision"] = field
     else:
         args["secret_revision"] = 0
-
-    field = data.get("created_at", None)
-    if field is not None:
-        args["created_at"] = parser.isoparse(field) if isinstance(field, str) else field
-    else:
-        args["created_at"] = None
-
-    field = data.get("updated_at", None)
-    if field is not None:
-        args["updated_at"] = parser.isoparse(field) if isinstance(field, str) else field
-    else:
-        args["updated_at"] = None
 
     field = data.get("ikev2_ciphers", None)
     if field is not None:
@@ -231,6 +231,18 @@ def unmarshal_Connection(data: Any) -> Connection:
     else:
         args["tunnel_status"] = TunnelStatus.UNKNOWN_TUNNEL_STATUS
 
+    field = data.get("tunnel_status_ipv4", None)
+    if field is not None:
+        args["tunnel_status_ipv4"] = field
+    else:
+        args["tunnel_status_ipv4"] = TunnelStatus.UNKNOWN_TUNNEL_STATUS
+
+    field = data.get("tunnel_status_ipv6", None)
+    if field is not None:
+        args["tunnel_status_ipv6"] = field
+    else:
+        args["tunnel_status_ipv6"] = TunnelStatus.UNKNOWN_TUNNEL_STATUS
+
     field = data.get("bgp_status_ipv4", None)
     if field is not None:
         args["bgp_status_ipv4"] = field
@@ -248,18 +260,6 @@ def unmarshal_Connection(data: Any) -> Connection:
         args["region"] = field
     else:
         args["region"] = None
-
-    field = data.get("tunnel_status_ipv4", None)
-    if field is not None:
-        args["tunnel_status_ipv4"] = field
-    else:
-        args["tunnel_status_ipv4"] = TunnelStatus.UNKNOWN_TUNNEL_STATUS
-
-    field = data.get("tunnel_status_ipv6", None)
-    if field is not None:
-        args["tunnel_status_ipv6"] = field
-    else:
-        args["tunnel_status_ipv6"] = TunnelStatus.UNKNOWN_TUNNEL_STATUS
 
     field = data.get("bgp_session_ipv4", None)
     if field is not None:
@@ -597,17 +597,17 @@ def unmarshal_CreateConnectionResponse(data: Any) -> CreateConnectionResponse:
 
     args: dict[str, Any] = {}
 
-    field = data.get("connection", None)
-    if field is not None:
-        args["connection"] = unmarshal_Connection(field)
-    else:
-        args["connection"] = None
-
     field = data.get("pre_shared_key", None)
     if field is not None:
         args["pre_shared_key"] = field
     else:
         args["pre_shared_key"] = None
+
+    field = data.get("connection", None)
+    if field is not None:
+        args["connection"] = unmarshal_Connection(field)
+    else:
+        args["connection"] = None
 
     return CreateConnectionResponse(**args)
 
@@ -786,17 +786,17 @@ def unmarshal_RenewConnectionPskResponse(data: Any) -> RenewConnectionPskRespons
 
     args: dict[str, Any] = {}
 
-    field = data.get("connection", None)
-    if field is not None:
-        args["connection"] = unmarshal_Connection(field)
-    else:
-        args["connection"] = None
-
     field = data.get("pre_shared_key", None)
     if field is not None:
         args["pre_shared_key"] = field
     else:
         args["pre_shared_key"] = None
+
+    field = data.get("connection", None)
+    if field is not None:
+        args["connection"] = unmarshal_Connection(field)
+    else:
+        args["connection"] = None
 
     return RenewConnectionPskResponse(**args)
 
