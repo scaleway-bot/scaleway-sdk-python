@@ -185,6 +185,11 @@ class Deployment:
     Number of replicas for the deployment.
     """
 
+    shard_count: int
+    """
+    Number of shards for the deployment.
+    """
+
     cpu_min: int
     """
     Minimum CPU count for the deployment.
@@ -251,6 +256,11 @@ class Preset:
     replica_count: int
     """
     Number of replicas for the preset.
+    """
+
+    shard_count: int
+    """
+    Number of shards for the preset.
     """
 
 
@@ -348,6 +358,11 @@ class CreateDeploymentRequest:
     tags: Optional[list[str]] = field(default_factory=list)
     """
     Tags to apply to the deployment.
+    """
+
+    shard_count: Optional[int] = 0
+    """
+    Number of shard for the deployment.
     """
 
     endpoints: Optional[list[EndpointSpec]] = field(default_factory=list)

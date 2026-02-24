@@ -198,12 +198,6 @@ def unmarshal_Deployment(data: Any) -> Deployment:
     else:
         args["tags"] = []
 
-    field = data.get("version", None)
-    if field is not None:
-        args["version"] = field
-    else:
-        args["version"] = None
-
     field = data.get("created_at", None)
     if field is not None:
         args["created_at"] = parser.isoparse(field) if isinstance(field, str) else field
@@ -216,11 +210,23 @@ def unmarshal_Deployment(data: Any) -> Deployment:
     else:
         args["updated_at"] = None
 
+    field = data.get("version", None)
+    if field is not None:
+        args["version"] = field
+    else:
+        args["version"] = None
+
     field = data.get("replica_count", None)
     if field is not None:
         args["replica_count"] = field
     else:
         args["replica_count"] = 0
+
+    field = data.get("shard_count", None)
+    if field is not None:
+        args["shard_count"] = field
+    else:
+        args["shard_count"] = 0
 
     field = data.get("cpu_min", None)
     if field is not None:
@@ -373,6 +379,12 @@ def unmarshal_Preset(data: Any) -> Preset:
         args["replica_count"] = field
     else:
         args["replica_count"] = 0
+
+    field = data.get("shard_count", None)
+    if field is not None:
+        args["shard_count"] = field
+    else:
+        args["shard_count"] = 0
 
     return Preset(**args)
 
@@ -569,6 +581,9 @@ def marshal_CreateDeploymentRequest(
 
     if request.tags is not None:
         output["tags"] = request.tags
+
+    if request.shard_count is not None:
+        output["shard_count"] = request.shard_count
 
     if request.endpoints is not None:
         output["endpoints"] = [

@@ -148,6 +148,7 @@ class JobDefinition:
     memory_limit: int
     local_storage_capacity: int
     image_uri: str
+    command: str
     environment_variables: dict[str, str]
     description: str
     startup_command: list[str]
@@ -159,7 +160,6 @@ class JobDefinition:
 
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
-    command: Optional[str] = None
     job_timeout: Optional[str] = None
     cron_schedule: Optional[CronSchedule] = None
     retry_policy: Optional[RetryPolicy] = None
@@ -179,6 +179,7 @@ class JobRun:
     cpu_limit: int
     memory_limit: int
     local_storage_capacity: int
+    command: str
     environment_variables: dict[str, str]
     startup_command: list[str]
     args: list[str]
@@ -195,7 +196,6 @@ class JobRun:
     reason: Optional[JobRunReason] = None
     exit_code: Optional[int] = None
     error_message: Optional[str] = None
-    command: Optional[str] = None
     attempts: Optional[int] = None
 
 
@@ -227,6 +227,11 @@ class CreateJobDefinitionRequest:
     Image to use for the job.
     """
 
+    command: str
+    """
+    Deprecated: please use startup_command instead.
+    """
+
     description: str
     """
     Description of the job.
@@ -240,11 +245,6 @@ class CreateJobDefinitionRequest:
     name: Optional[str] = None
     """
     Name of the job definition.
-    """
-
-    command: Optional[str] = None
-    """
-    Deprecated: please use startup_command instead.
     """
 
     startup_command: Optional[list[str]] = field(default_factory=list)
