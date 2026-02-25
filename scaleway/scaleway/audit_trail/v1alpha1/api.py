@@ -13,28 +13,44 @@ from scaleway_core.utils import (
     fetch_all_pages,
 )
 from .types import (
+    AlertRuleStatus,
     ListAuthenticationEventsRequestOrderBy,
     ListCombinedEventsRequestOrderBy,
     ListEventsRequestOrderBy,
     ListExportJobsRequestOrderBy,
     ResourceType,
+    AlertRule,
     CreateExportJobRequest,
+    DisableAlertRulesRequest,
+    DisableAlertRulesResponse,
+    EnableAlertRulesRequest,
+    EnableAlertRulesResponse,
     ExportJob,
     ExportJobS3,
+    ListAlertRulesResponse,
     ListAuthenticationEventsResponse,
     ListCombinedEventsResponse,
     ListEventsResponse,
     ListExportJobsResponse,
     ListProductsResponse,
+    SetEnabledAlertRulesRequest,
+    SetEnabledAlertRulesResponse,
 )
 from .marshalling import (
     unmarshal_ExportJob,
+    unmarshal_DisableAlertRulesResponse,
+    unmarshal_EnableAlertRulesResponse,
+    unmarshal_ListAlertRulesResponse,
     unmarshal_ListAuthenticationEventsResponse,
     unmarshal_ListCombinedEventsResponse,
     unmarshal_ListEventsResponse,
     unmarshal_ListExportJobsResponse,
     unmarshal_ListProductsResponse,
+    unmarshal_SetEnabledAlertRulesResponse,
     marshal_CreateExportJobRequest,
+    marshal_DisableAlertRulesRequest,
+    marshal_EnableAlertRulesRequest,
+    marshal_SetEnabledAlertRulesRequest,
 )
 
 
@@ -429,3 +445,206 @@ class AuditTrailV1Alpha1API(API):
                 "order_by": order_by,
             },
         )
+
+    def list_alert_rules(
+        self,
+        *,
+        region: Optional[ScwRegion] = None,
+        organization_id: Optional[str] = None,
+        status: Optional[AlertRuleStatus] = None,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+    ) -> ListAlertRulesResponse:
+        """
+        List alert rules for a specified organization and their current status (enabled or disabled).
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param organization_id: ID of the Organization to target.
+        :param status: (Optional) Status of the alert rule.
+        :param page:
+        :param page_size:
+        :return: :class:`ListAlertRulesResponse <ListAlertRulesResponse>`
+
+        Usage:
+        ::
+
+            result = api.list_alert_rules()
+        """
+
+        param_region = validate_path_param(
+            "region", region or self.client.default_region
+        )
+
+        res = self._request(
+            "GET",
+            f"/audit-trail/v1alpha1/regions/{param_region}/alert-rules",
+            params={
+                "organization_id": organization_id
+                or self.client.default_organization_id,
+                "page": page,
+                "page_size": page_size or self.client.default_page_size,
+                "status": status,
+            },
+        )
+
+        self._throw_on_error(res)
+        return unmarshal_ListAlertRulesResponse(res.json())
+
+    def list_alert_rules_all(
+        self,
+        *,
+        region: Optional[ScwRegion] = None,
+        organization_id: Optional[str] = None,
+        status: Optional[AlertRuleStatus] = None,
+        page: Optional[int] = None,
+        page_size: Optional[int] = None,
+    ) -> list[AlertRule]:
+        """
+        List alert rules for a specified organization and their current status (enabled or disabled).
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param organization_id: ID of the Organization to target.
+        :param status: (Optional) Status of the alert rule.
+        :param page:
+        :param page_size:
+        :return: :class:`list[AlertRule] <list[AlertRule]>`
+
+        Usage:
+        ::
+
+            result = api.list_alert_rules_all()
+        """
+
+        return fetch_all_pages(
+            type=ListAlertRulesResponse,
+            key="alert_rules",
+            fetcher=self.list_alert_rules,
+            args={
+                "region": region,
+                "organization_id": organization_id,
+                "status": status,
+                "page": page,
+                "page_size": page_size,
+            },
+        )
+
+    def enable_alert_rules(
+        self,
+        *,
+        region: Optional[ScwRegion] = None,
+        organization_id: Optional[str] = None,
+        alert_rule_ids: Optional[list[str]] = None,
+    ) -> EnableAlertRulesResponse:
+        """
+        Enable alert rules.
+        Enable alert rules for a specified organization. Enabled rules will trigger alerts when matching events occur.
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param organization_id: ID of the Organization to target.
+        :param alert_rule_ids: List of IDs of the rules to enable.
+        :return: :class:`EnableAlertRulesResponse <EnableAlertRulesResponse>`
+
+        Usage:
+        ::
+
+            result = api.enable_alert_rules()
+        """
+
+        param_region = validate_path_param(
+            "region", region or self.client.default_region
+        )
+
+        res = self._request(
+            "POST",
+            f"/audit-trail/v1alpha1/regions/{param_region}/enable-alert-rules",
+            body=marshal_EnableAlertRulesRequest(
+                EnableAlertRulesRequest(
+                    region=region,
+                    organization_id=organization_id,
+                    alert_rule_ids=alert_rule_ids,
+                ),
+                self.client,
+            ),
+        )
+
+        self._throw_on_error(res)
+        return unmarshal_EnableAlertRulesResponse(res.json())
+
+    def disable_alert_rules(
+        self,
+        *,
+        region: Optional[ScwRegion] = None,
+        organization_id: Optional[str] = None,
+        alert_rule_ids: Optional[list[str]] = None,
+    ) -> DisableAlertRulesResponse:
+        """
+        Disable alert rules.
+        Disable alert rules for a specified organization. Disabled rules will no longer trigger alerts when matching events occur.
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param organization_id: ID of the Organization to target.
+        :param alert_rule_ids: List of IDs of the rules to disable.
+        :return: :class:`DisableAlertRulesResponse <DisableAlertRulesResponse>`
+
+        Usage:
+        ::
+
+            result = api.disable_alert_rules()
+        """
+
+        param_region = validate_path_param(
+            "region", region or self.client.default_region
+        )
+
+        res = self._request(
+            "POST",
+            f"/audit-trail/v1alpha1/regions/{param_region}/disable-alert-rules",
+            body=marshal_DisableAlertRulesRequest(
+                DisableAlertRulesRequest(
+                    region=region,
+                    organization_id=organization_id,
+                    alert_rule_ids=alert_rule_ids,
+                ),
+                self.client,
+            ),
+        )
+
+        self._throw_on_error(res)
+        return unmarshal_DisableAlertRulesResponse(res.json())
+
+    def set_enabled_alert_rules(
+        self,
+        *,
+        region: Optional[ScwRegion] = None,
+        organization_id: Optional[str] = None,
+        enabled_alert_rule_ids: Optional[list[str]] = None,
+    ) -> SetEnabledAlertRulesResponse:
+        """
+        Set the alert rules to enabled.
+        Set the alert rules to enabled by replacing the set of enabled alert rules for a specified organization. The provided list defines the complete set of rules that should be enabled. Any previously enabled rule not included in the request will be disabled.
+        :param region: Region to target. If none is passed will use default region from the config.
+        :param organization_id: ID of the Organization to target.
+        :param enabled_alert_rule_ids: List of IDs of the rules that must be enabled after the update.
+        :return: :class:`SetEnabledAlertRulesResponse <SetEnabledAlertRulesResponse>`
+
+        Usage:
+        ::
+
+            result = api.set_enabled_alert_rules()
+        """
+
+        param_region = validate_path_param(
+            "region", region or self.client.default_region
+        )
+
+        res = self._request(
+            "PATCH",
+            f"/audit-trail/v1alpha1/regions/{param_region}/alert-rules",
+            body=marshal_SetEnabledAlertRulesRequest(
+                SetEnabledAlertRulesRequest(
+                    region=region,
+                    organization_id=organization_id,
+                    enabled_alert_rule_ids=enabled_alert_rule_ids,
+                ),
+                self.client,
+            ),
+        )
+
+        self._throw_on_error(res)
+        return unmarshal_SetEnabledAlertRulesResponse(res.json())

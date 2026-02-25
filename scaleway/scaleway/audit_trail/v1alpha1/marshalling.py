@@ -10,6 +10,7 @@ from scaleway_core.utils import (
     resolve_one_of,
 )
 from .types import (
+    AlertRuleStatus,
     AuthenticationEventFailureReason,
     AuthenticationEventMFAType,
     AuthenticationEventMethod,
@@ -18,6 +19,10 @@ from .types import (
     ExportJobS3,
     ExportJobStatus,
     ExportJob,
+    AlertRule,
+    DisableAlertRulesResponse,
+    EnableAlertRulesResponse,
+    ListAlertRulesResponse,
     AccountContractSignatureInfoAccountContractInfo,
     AccountContractSignatureInfo,
     AccountOrganizationInfo,
@@ -70,7 +75,11 @@ from .types import (
     ProductService,
     Product,
     ListProductsResponse,
+    SetEnabledAlertRulesResponse,
     CreateExportJobRequest,
+    DisableAlertRulesRequest,
+    EnableAlertRulesRequest,
+    SetEnabledAlertRulesRequest,
 )
 from ...std.types import (
     CountryCode as StdCountryCode,
@@ -194,6 +203,104 @@ def unmarshal_ExportJob(data: Any) -> ExportJob:
         args["last_status"] = None
 
     return ExportJob(**args)
+
+
+def unmarshal_AlertRule(data: Any) -> AlertRule:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'AlertRule' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("id", None)
+    if field is not None:
+        args["id"] = field
+    else:
+        args["id"] = None
+
+    field = data.get("name", None)
+    if field is not None:
+        args["name"] = field
+    else:
+        args["name"] = None
+
+    field = data.get("description", None)
+    if field is not None:
+        args["description"] = field
+    else:
+        args["description"] = None
+
+    field = data.get("status", None)
+    if field is not None:
+        args["status"] = field
+    else:
+        args["status"] = AlertRuleStatus.UNKNOWN_STATUS
+
+    return AlertRule(**args)
+
+
+def unmarshal_DisableAlertRulesResponse(data: Any) -> DisableAlertRulesResponse:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'DisableAlertRulesResponse' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("alert_rules", None)
+    if field is not None:
+        args["alert_rules"] = (
+            [unmarshal_AlertRule(v) for v in field] if field is not None else None
+        )
+    else:
+        args["alert_rules"] = []
+
+    return DisableAlertRulesResponse(**args)
+
+
+def unmarshal_EnableAlertRulesResponse(data: Any) -> EnableAlertRulesResponse:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'EnableAlertRulesResponse' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("alert_rules", None)
+    if field is not None:
+        args["alert_rules"] = (
+            [unmarshal_AlertRule(v) for v in field] if field is not None else None
+        )
+    else:
+        args["alert_rules"] = []
+
+    return EnableAlertRulesResponse(**args)
+
+
+def unmarshal_ListAlertRulesResponse(data: Any) -> ListAlertRulesResponse:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'ListAlertRulesResponse' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("alert_rules", None)
+    if field is not None:
+        args["alert_rules"] = (
+            [unmarshal_AlertRule(v) for v in field] if field is not None else None
+        )
+    else:
+        args["alert_rules"] = []
+
+    field = data.get("total_count", None)
+    if field is not None:
+        args["total_count"] = field
+    else:
+        args["total_count"] = 0
+
+    return ListAlertRulesResponse(**args)
 
 
 def unmarshal_AccountContractSignatureInfoAccountContractInfo(
@@ -1806,6 +1913,25 @@ def unmarshal_ListProductsResponse(data: Any) -> ListProductsResponse:
     return ListProductsResponse(**args)
 
 
+def unmarshal_SetEnabledAlertRulesResponse(data: Any) -> SetEnabledAlertRulesResponse:
+    if not isinstance(data, dict):
+        raise TypeError(
+            "Unmarshalling the type 'SetEnabledAlertRulesResponse' failed as data isn't a dictionary."
+        )
+
+    args: dict[str, Any] = {}
+
+    field = data.get("alert_rules", None)
+    if field is not None:
+        args["alert_rules"] = (
+            [unmarshal_AlertRule(v) for v in field] if field is not None else None
+        )
+    else:
+        args["alert_rules"] = []
+
+    return SetEnabledAlertRulesResponse(**args)
+
+
 def marshal_ExportJobS3(
     request: ExportJobS3,
     defaults: ProfileDefaults,
@@ -1854,5 +1980,56 @@ def marshal_CreateExportJobRequest(
 
     if request.tags is not None:
         output["tags"] = request.tags
+
+    return output
+
+
+def marshal_DisableAlertRulesRequest(
+    request: DisableAlertRulesRequest,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.organization_id is not None:
+        output["organization_id"] = request.organization_id
+    else:
+        output["organization_id"] = defaults.default_organization_id
+
+    if request.alert_rule_ids is not None:
+        output["alert_rule_ids"] = request.alert_rule_ids
+
+    return output
+
+
+def marshal_EnableAlertRulesRequest(
+    request: EnableAlertRulesRequest,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.organization_id is not None:
+        output["organization_id"] = request.organization_id
+    else:
+        output["organization_id"] = defaults.default_organization_id
+
+    if request.alert_rule_ids is not None:
+        output["alert_rule_ids"] = request.alert_rule_ids
+
+    return output
+
+
+def marshal_SetEnabledAlertRulesRequest(
+    request: SetEnabledAlertRulesRequest,
+    defaults: ProfileDefaults,
+) -> dict[str, Any]:
+    output: dict[str, Any] = {}
+
+    if request.organization_id is not None:
+        output["organization_id"] = request.organization_id
+    else:
+        output["organization_id"] = defaults.default_organization_id
+
+    if request.enabled_alert_rule_ids is not None:
+        output["enabled_alert_rule_ids"] = request.enabled_alert_rule_ids
 
     return output
