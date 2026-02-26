@@ -19,6 +19,17 @@ from ...std.types import (
 )
 
 
+class AlertRuleStatus(str, Enum, metaclass=StrEnumMeta):
+    UNKNOWN_STATUS = "unknown_status"
+    ENABLED = "enabled"
+    DISABLED = "disabled"
+    ENABLING = "enabling"
+    DISABLING = "disabling"
+
+    def __str__(self) -> str:
+        return str(self.value)
+
+
 class AuthenticationEventFailureReason(str, Enum, metaclass=StrEnumMeta):
     UNKNOWN_FAILURE_REASON = "unknown_failure_reason"
     INVALID_MFA = "invalid_mfa"
@@ -701,6 +712,29 @@ class ProductService:
 
 
 @dataclass
+class AlertRule:
+    id: str
+    """
+    ID of the alert rule.
+    """
+
+    name: str
+    """
+    Name of the alert rule.
+    """
+
+    description: str
+    """
+    Description of the alert rule.
+    """
+
+    status: AlertRuleStatus
+    """
+    Current status of the alert rule.
+    """
+
+
+@dataclass
 class ListCombinedEventsResponseCombinedEvent:
     api: Optional[Event] = None
 
@@ -802,6 +836,92 @@ class DeleteExportJobRequest:
     region: Optional[ScwRegion] = None
     """
     Region to target. If none is passed will use default region from the config.
+    """
+
+
+@dataclass
+class DisableAlertRulesRequest:
+    region: Optional[ScwRegion] = None
+    """
+    Region to target. If none is passed will use default region from the config.
+    """
+
+    organization_id: Optional[str] = None
+    """
+    ID of the Organization to target.
+    """
+
+    alert_rule_ids: Optional[list[str]] = field(default_factory=list)
+    """
+    List of IDs of the rules to disable.
+    """
+
+
+@dataclass
+class DisableAlertRulesResponse:
+    alert_rules: list[AlertRule]
+    """
+    List of the rules that were disabled.
+    """
+
+
+@dataclass
+class EnableAlertRulesRequest:
+    region: Optional[ScwRegion] = None
+    """
+    Region to target. If none is passed will use default region from the config.
+    """
+
+    organization_id: Optional[str] = None
+    """
+    ID of the Organization to target.
+    """
+
+    alert_rule_ids: Optional[list[str]] = field(default_factory=list)
+    """
+    List of IDs of the rules to enable.
+    """
+
+
+@dataclass
+class EnableAlertRulesResponse:
+    alert_rules: list[AlertRule]
+    """
+    List of the rules that were enabled.
+    """
+
+
+@dataclass
+class ListAlertRulesRequest:
+    region: Optional[ScwRegion] = None
+    """
+    Region to target. If none is passed will use default region from the config.
+    """
+
+    organization_id: Optional[str] = None
+    """
+    ID of the Organization to target.
+    """
+
+    status: Optional[AlertRuleStatus] = AlertRuleStatus.UNKNOWN_STATUS
+    """
+    (Optional) Status of the alert rule.
+    """
+
+    page: Optional[int] = 0
+    page_size: Optional[int] = 0
+
+
+@dataclass
+class ListAlertRulesResponse:
+    alert_rules: list[AlertRule]
+    """
+    Single page of alert rules matching the requested criteria.
+    """
+
+    total_count: int
+    """
+    Total count of alert rules matching the requested criteria.
     """
 
 
@@ -1000,4 +1120,30 @@ class ListProductsResponse:
     total_count: int
     """
     Number of integrated products.
+    """
+
+
+@dataclass
+class SetEnabledAlertRulesRequest:
+    region: Optional[ScwRegion] = None
+    """
+    Region to target. If none is passed will use default region from the config.
+    """
+
+    organization_id: Optional[str] = None
+    """
+    ID of the Organization to target.
+    """
+
+    enabled_alert_rule_ids: Optional[list[str]] = field(default_factory=list)
+    """
+    List of IDs of the rules that must be enabled after the update.
+    """
+
+
+@dataclass
+class SetEnabledAlertRulesResponse:
+    alert_rules: list[AlertRule]
+    """
+    List of the rules that were enabled.
     """
